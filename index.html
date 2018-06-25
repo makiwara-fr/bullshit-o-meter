@@ -1,0 +1,37 @@
+<!doctype html>
+
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+
+  <title>bullshit-o-meter</title>
+  <meta name="description" content="Simple bullshit-o-meter">
+  <meta name="author" content="makiwara.fr">
+
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body >
+	<header class="shadow">
+		<h1>Bullshit-o-meter</h1>
+		<h2>Show your boredom listening to Agile disruptive blockchain</h2>
+		<p><a href="https://makiwara.fr">makiwara.fr</a> - 2018</p>
+	</header>
+	<section class="shadow">
+	<canvas id="meter" >
+	</canvas>
+	<form>
+	<input type="range" min="1" max="100" value="1" class="slider" id="slider">
+	</form>
+	</section>
+	
+
+	<script src="drawing.js"></script>
+	<script src="sliding.js"></script>
+	
+</body>
+</html>

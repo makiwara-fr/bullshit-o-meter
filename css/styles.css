@@ -1,0 +1,103 @@
+/*
+Theme Name: bullshit-o-meter
+Description: 
+Version: 0.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/* Content :
+
+100 : general architecture 
+200 : Elements of headers and footers 
+300 : Contents
+999 : Generic
+
+*/
+
+@charset "UTF-8";
+
+/*----------------------------*/
+/* 100 - general architecture */
+/*----------------------------*/
+
+/* fonts */
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans:700');
+
+
+
+
+
+
+/* 
+ Generic settings
+*/
+
+* {
+	margin : 0;
+}
+
+body {
+	background-color: #f9fbff;
+	color : black;
+	font-family : Montserrat, sans-serif;
+	
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+
+
+
+
+/*----------------------------*/
+/* 200 - Headers & Footers */
+/*----------------------------*/
+
+header {
+	background-color: white;
+	height:8em;
+	width: 30em;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+	margin: 1em 0 1em 0;
+}
+
+
+
+
+
+
+canvas {
+	background-color: white;
+}
+.no_margin {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-family: 'Open Sans', sans-serif;
+}
+
+h2 {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 14pt;
+	font-style: normal;
+}
+
+
+
+p {
+	font-family: 'Montserrat', sans-serif;
+}
+
+.shadow {
+	 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
