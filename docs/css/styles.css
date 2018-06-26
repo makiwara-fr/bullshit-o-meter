@@ -1,6 +1,6 @@
 /*
-Theme Name: makiwara.fr
-Description: used for makiwara.fr 
+Theme Name: bullshit-o-meter
+Description: 
 Version: 0.1
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -69,29 +69,56 @@ header {
 	margin: 1em 0 1em 0;
 }
 
+footer {
+	background-color: white;
+	display: flex;
+	align-content: right;
+	justify-content: center;
+	flex-direction: column;
+	text-align: right;
+	margin: 1em 0 1em 0;
+}
 
 
 
+section {
+	background-color: white;
+	align-content: center;
+	text-align: center;
+	padding: 1em ;
+}
 
 
 canvas {
-	background-color: white;
+	
 }
 .no_margin {
 	margin: 0;
 	padding: 0;
 }
 
+#slider {
+	width: 75%;
+	margin: 1em 0 1em 0;
+}
+
 h1 {
 	font-family: 'Open Sans', sans-serif;
+	text-align: left;
 }
 
 h2 {
 	font-family: 'Montserrat', sans-serif;
 	font-size: 14pt;
 	font-style: normal;
+	text-align: left;
 }
 
+h3 {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 12pt;
+	font-style: normal;
+}
 
 
 p {

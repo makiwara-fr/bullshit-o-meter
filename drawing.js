@@ -76,10 +76,15 @@ makiwara.bullshitometer.drawing = {
 
 	/* general settings */
 	canvas_size : {x: 1200, y: 500},
-	grad_thickness : 2,
-	color_meter : "#000000",
+	grad_thickness : 1,
+	grad_sector_thickness : 10,
+	line_thickness : 3,
+	color_meter : "#8d8d8e",
 	color_line : "#000000",
 	
+	color_warning: "#f27f1a",
+	color_danger: "#FF1300",
+	color_ok : "#68ba51",
 	
 	grad : {x: 0, y: 0, radius: 0, alpha : Math.PI /16, omega : Math.PI * 15/16, grad_length: 0.1},
 	
@@ -110,8 +115,11 @@ makiwara.bullshitometer.drawing = {
 		if (window.innerWidth < 480) {
 			this.canvas.width = 480;
 		} 
+		else if (window.innerWidth < 600){
+			this.canvas.width = window.innerWidth * 0.9;
+		}
 		else {
-			this.canvas.width = 480;
+			this.canvas.width = 600;
 		}
 		this.canvas.height = this.canvas.width * 0.75;
 		
@@ -140,25 +148,49 @@ makiwara.bullshitometer.drawing = {
 			
 			console.log("Drawing the graduation");
 			
-			var grads = new Path2D();
+			//length of the arc 
+			var span = 2*Math.PI - this.grad.omega + this.grad.alpha;
 			
 			//draw the arc of graduations
 			//===========================
+			
+			var grads = new Path2D();
 			grads.lineWidth = this.grad_thickness;
 			grads.arc(this.grad.x, this.grad.y, this.grad.radius , this.grad.alpha, this.grad.omega, true)
 			
 			
-			this.ctx.lineWidth = 2 * this.line_thickness;
+			this.ctx.lineWidth = 2 * this.grad_thickness;
 			this.ctx.strokeStyle = this.color_meter;
 			
 			this.ctx.lineJoin = "miter";
 			// draw the path
 			this.ctx.stroke(grads);
 			
+			
+			// draw the arc of color
+ 			//=====================
+			
+			var sector_path;
+			var sector_limits = [{color: this.color_ok, start: 0.8, end: 1}, {color: this.color_ok, start: 0.74, end: 0.795}, {color: this.color_ok, start: 0.7, end: 0.735}, {color: this.color_ok, start: 0.67, end: 0.695}, {color: this.color_danger, start: 0, end: 0.1},  {color: this.color_warning, start: 0.105, end: 0.2}, {color: this.color_warning, start: 0.205, end: 0.260}, {color: this.color_warning, start: 0.265, end: 0.29},{color: this.color_warning, start: 0.295, end: 0.31}];
+			
+			
+			for (let sector of sector_limits) {
+   				sector_path = new Path2D();
+   				sector_path.arc(this.grad.x, this.grad.y, this.grad.radius * 1.15, this.grad.alpha - sector.start * span, this.grad.alpha - sector.end * span, true);
+   				this.ctx.lineWidth = 5 * this.grad_sector_thickness;
+   				this.ctx.strokeStyle = sector.color;
+   				this.ctx.stroke(sector_path);
+			};
+			
+			
+			
+			
+			
+			
 			//draw the measuring lines and figures
 			//====================================
 			var line, txt ;
-			var span = 2*Math.PI - this.grad.omega + this.grad.alpha;
+			
 			var angle = 0
 			var length = this.grad.grad_length;
 			
@@ -172,7 +204,7 @@ makiwara.bullshitometer.drawing = {
 					this.ctx.font = "16pt Arial";
 					this.ctx.textAlign = "center";
 					this.ctx.textBaseline = 'middle';
-					this.ctx.fillText(""+ i*10 + "%", this.grad.x + this.grad.radius * 1.15 * Math.cos(angle), this.grad.y + this.grad.radius * 1.15 * Math.sin(angle));
+					this.ctx.fillText(""+ i*10 + "%", this.grad.x + this.grad.radius * 0.7 * Math.cos(angle), this.grad.y + this.grad.radius * 0.7 * Math.sin(angle));
 				}
 				else
 				{
@@ -182,7 +214,7 @@ makiwara.bullshitometer.drawing = {
 				line.moveTo(this.grad.x + this.grad.radius * (length) * Math.cos(angle), this.grad.y + this.grad.radius * (length) * Math.sin(angle));
 				line.lineTo(this.grad.x + this.grad.radius * Math.cos(angle), this.grad.y + this.grad.radius * Math.sin(angle));
 		
-				this.ctx.lineWidth = 2 * this.line_thickness;
+				this.ctx.lineWidth = this.grad_thickness;
 				this.ctx.strokeStyle = this.color_line;
 				this.ctx.lineJoin = "miter";
 		
@@ -214,6 +246,9 @@ makiwara.bullshitometer.drawing = {
 		//remove last line
 		this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
 		
+		//draw the rest of the meter
+		this.draw_meter();
+		
 		//define the new line
 		this.line = new Path2D();
 		var span = 2*Math.PI - this.grad.omega + this.grad.alpha;
@@ -221,7 +256,7 @@ makiwara.bullshitometer.drawing = {
 		
 		
 		this.line.moveTo(this.grad.x, this.grad.y);
-		this.line.lineTo(this.grad.x + this.grad.radius * Math.cos(angle), this.grad.y + this.grad.radius * Math.sin(angle));
+		this.line.lineTo(this.grad.x + this.grad.radius * 1.15 * Math.cos(angle), this.grad.y + this.grad.radius * 1.15 * Math.sin(angle));
 		
 		this.ctx.lineWidth = 2 * this.line_thickness;
 		this.ctx.strokeStyle = this.color_line;
@@ -230,8 +265,7 @@ makiwara.bullshitometer.drawing = {
 		//draw the line
 		this.ctx.stroke(this.line);
 		
-		//draw the rest of the meter
-		this.draw_meter();
+		
 		
 	}
 	

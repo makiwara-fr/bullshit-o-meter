@@ -2,8 +2,8 @@
 if (makiwara === undefined){
 	var makiwara = {};
 }
-if (makiwara.rerbstyle === undefined) {
-	makiwara.rerbstyle = {};
+if (makiwara.bullshitometer === undefined) {
+	makiwara.bullshitometer = {};
 }
 
 class Thread {
@@ -62,7 +62,7 @@ class Thread {
 	}
 }
 
-makiwara.rerbstyle.drawing = {
+makiwara.bullshitometer.drawing = {
 	
 	
 	/* ==========================
@@ -76,33 +76,30 @@ makiwara.rerbstyle.drawing = {
 
 	/* general settings */
 	canvas_size : {x: 1200, y: 500},
-	line_thickness : 15,
-	general_size : 300,
+	grad_thickness : 1,
+	grad_sector_thickness : 10,
+	line_thickness : 3,
+	color_meter : "#8d8d8e",
+	color_line : "#000000",
+	
+	color_warning: "#f27f1a",
+	color_danger: "#FF1300",
+	color_ok : "#68ba51",
+	
+	grad : {x: 0, y: 0, radius: 0, alpha : Math.PI /16, omega : Math.PI * 15/16, grad_length: 0.1},
+	
+	
+	
 	canvas: null,
 	ctx: null,
-	player: null,
 	
-	
-	/* Drawing the line */
-	line_nodes: {},
-	stations_nw : ["Aéroport Charles de Gaulle 2 TGV", "Aéroport Charles de Gaulle 1", "Parc des expositions", "Villepinte", "Sevran Beaudottes"],
-	stations_north_to_south_main_branch : ["Aulnay sous bois", "Le blanc Mesnil", "Drancy", "Le Bourget", "La Courneuve Aubervilliers", "La Plaine Stade de France", "Gare du Nord", "Chatelet-Les halles", "St Michel Notre Dame", "Luxembourg", "Port Royal", "Denfert-Rochereau", "Cité Universitaire", "Gentilly", "Laplace", "Arcueil-Cachan", "Bagneux", "Bourg-la-Reine"],
-	color_line: "#4c90cd",
-	color_selected_stations: "#FF0000",
-	color_default_stations: "#FFFFFF",
-	
-	/* the route taken by the animation */
-	route : [],
-	
-	
-	/* all the elements */
-	stations_dots: [],
-	playing: false,
+	line: null,
+
 	
 
 	/* ==========================
 	
-			Drawing the line
+			Drawing the meter
 	
 	 ============================*/
 	
@@ -111,34 +108,29 @@ makiwara.rerbstyle.drawing = {
 	/* define size of canvas and set general parameters dynamically */
 	set_canvas: function () {
 
-		this.canvas = document.getElementById("line");
+		this.canvas = document.getElementById("meter");
 		
-		if (window.innerWidth - 40 > this.canvas_size.x) {
-			this.canvas_size.x = window.innerWidth - 40;
-			console.log("Window is " + window.innerWidth + " wide. Setting canvas to : " + this.canvas_size.x);
-			
+		
+		/* set canvas size*/
+		if (window.innerWidth < 480) {
+			this.canvas.width = 480;
+		} 
+		else if (window.innerWidth < 600){
+			this.canvas.width = window.innerWidth * 0.9;
 		}
-		//define the canvas actual size
-		this.canvas.width = this.canvas_size.x;
-		this.canvas.height = this.canvas_size.y;
-		//define main proportion
-		this.general_size = (this.canvas_size.x - 100) / 2.3;
+		else {
+			this.canvas.width = 600;
+		}
+		this.canvas.height = this.canvas.width * 0.75;
 		
 		
-		/* define the position of main nodes of the line */
-		this.line_nodes = {
-			n_north : {x: 50 + (this.general_size * 0.4), y: 250},
-			n_south : {x: 50 + (this.general_size * 1.4), y: 250},
-			n_sw: {x: 50 + (this.general_size * 1.5), y: 350},
-			n_se: {x: 50 + (this.general_size * 1.5), y: 150},
-			n_ne: {x: 50 + (this.general_size * 0.3), y: 150},
-			n_nw: {x: 50 + (this.general_size * 0.3), y: 350},
-			n_fnw: {x: 50, y: 350},
-			n_fne: {x: 50 + (this.general_size * 0.1), y: 150},
-			n_fsw: {x: 50 + (this.general_size * 1.7), y: 350},
-			n_fse: {x: (this.canvas_size.x - 50), y: 150}
-
-		};
+		/* store the info for graduations  */
+		
+		this.grad.x = this.canvas.width / 2;
+		this.grad.y = this.canvas.height * 0.75;
+		this.grad.radius = this.canvas.width / 2 * 0.75;
+		
+		
 		
 		/* define context */
 		this.ctx = this.canvas.getContext("2d");
@@ -149,174 +141,135 @@ makiwara.rerbstyle.drawing = {
 
 	
 	
-	draw_line: function () {
+	draw_meter: function () {
 		
 		
 		if (this.ctx) {
 			
+			console.log("Drawing the graduation");
 			
-			var line = new Path2D();
+			//length of the arc 
+			var span = 2*Math.PI - this.grad.omega + this.grad.alpha;
 			
-			line.lineWidth = this.line_thickness;
+			//draw the arc of graduations
+			//===========================
 			
-			line.moveTo(this.line_nodes.n_fnw.x, this.line_nodes.n_fnw.y);
-			line.lineTo(this.line_nodes.n_nw.x, this.line_nodes.n_nw.y);
-			line.lineTo(this.line_nodes.n_north.x, this.line_nodes.n_north.y);
-			line.lineTo(this.line_nodes.n_south.x, this.line_nodes.n_south.y);
-			line.lineTo(this.line_nodes.n_sw.x, this.line_nodes.n_sw.y);
-			line.lineTo(this.line_nodes.n_fsw.x, this.line_nodes.n_fsw.y);
-			line.moveTo(this.line_nodes.n_south.x, this.line_nodes.n_south.y);
-			line.lineTo(this.line_nodes.n_se.x, this.line_nodes.n_se.y);
-			line.lineTo(this.line_nodes.n_fse.x, this.line_nodes.n_fse.y);
-			line.moveTo(this.line_nodes.n_north.x, this.line_nodes.n_north.y);
-			line.lineTo(this.line_nodes.n_ne.x, this.line_nodes.n_ne.y);
-			line.lineTo(this.line_nodes.n_fne.x, this.line_nodes.n_fne.y);
+			var grads = new Path2D();
+			grads.lineWidth = this.grad_thickness;
+			grads.arc(this.grad.x, this.grad.y, this.grad.radius , this.grad.alpha, this.grad.omega, true)
 			
-			this.ctx.lineWidth = 2 * this.line_thickness;
-			this.ctx.strokeStyle = this.color_line;
-			this.ctx.lineCap = "round";
+			
+			this.ctx.lineWidth = 2 * this.grad_thickness;
+			this.ctx.strokeStyle = this.color_meter;
+			
 			this.ctx.lineJoin = "miter";
-			this.ctx.stroke(line);
+			// draw the path
+			this.ctx.stroke(grads);
 			
 			
-		}
-	},
-	
-	
-	add_stations_on_branch: function (stations_lists, point_orig, point_destination, top_or_down) {
-        
-        var x, y, i, l;
-		l = stations_lists.length
-
-		for (i = 0; i < l; i++){
+			// draw the arc of color
+ 			//=====================
 			
-			//draw a circle per station
-			var circle = new Path2D();
-			this.ctx.fillStyle = this.color_default_stations;
-			this.ctx.rotate(0);
-			x = (point_destination.x - point_orig.x ) / (stations_lists.length - 1) * i + point_orig.x;
-			y = (point_destination.y - point_orig.y ) / (stations_lists.length - 1) * i + point_orig.y;
-			
-			circle.moveTo(x, y);
-			circle.arc(x, y , this.line_thickness, 0, 2*Math.PI, true);
-			this.ctx.fill(circle);
-			//add to general list of dots
-			this.stations_dots.push({id: stations_lists[i], shape: circle});
-			
-			//add the name of stations
-			this.ctx.save();
-			var text = new Path2D();
-			
-			this.ctx.fillStyle = "black";
+			var sector_path;
+			var sector_limits = [{color: this.color_ok, start: 0.8, end: 1}, {color: this.color_ok, start: 0.74, end: 0.795}, {color: this.color_ok, start: 0.7, end: 0.735}, {color: this.color_ok, start: 0.67, end: 0.695}, {color: this.color_danger, start: 0, end: 0.1},  {color: this.color_warning, start: 0.105, end: 0.2}, {color: this.color_warning, start: 0.205, end: 0.260}, {color: this.color_warning, start: 0.265, end: 0.29},{color: this.color_warning, start: 0.295, end: 0.31}];
 			
 			
-			this.ctx.textAlign = 'right';
-			if (top_or_down){
+			for (let sector of sector_limits) {
+   				sector_path = new Path2D();
+   				sector_path.arc(this.grad.x, this.grad.y, this.grad.radius * 1.15, this.grad.alpha - sector.start * span, this.grad.alpha - sector.end * span, true);
+   				this.ctx.lineWidth = 5 * this.grad_sector_thickness;
+   				this.ctx.strokeStyle = sector.color;
+   				this.ctx.stroke(sector_path);
+			};
+			
+			
+			
+			
+			
+			
+			//draw the measuring lines and figures
+			//====================================
+			var line, txt ;
+			
+			var angle = 0
+			var length = this.grad.grad_length;
+			
+			for (var i=0; i<11; i++) {
 				
-				// ctx.fillText(stations_lists[i], x , y + 2*this.line_thickness);
-				this.ctx.translate(x,y +  2 * this.line_thickness);
-				
-				
-			}
-			else{
-
-				// ctx.fillText(stations_lists[i], x , y - 2*this.line_thickness);
-				this.ctx.translate(x,y - 2 * this.line_thickness);
-			}
-			this.ctx.rotate(-Math.PI / 2);
-			this.ctx.fillText(stations_lists[i], 0 , 0);
-			this.ctx.restore();
-		}
-		
-	},
-	
-	add_stations: function(){
-		this.add_stations_on_branch(this.stations_nw, this.line_nodes.n_fnw, this.line_nodes.n_nw, true);
-		this.add_stations_on_branch(this.stations_north_to_south_main_branch, this.line_nodes.n_north, this.line_nodes.n_south, true);
-		
-		//add a listener to detect clicks on stations
-		this.canvas.addEventListener('click', function (e)
-        {
-            var x = e.offsetX;
-            var y = e.offsetY;
-			var i, l;
-			l = makiwara.rerbstyle.drawing.stations_dots.length
-			for (i = 0; i < l; i++) {
-				/* dectect if a station has been clicked on */
-				if (makiwara.rerbstyle.drawing.ctx.isPointInPath(makiwara.rerbstyle.drawing.stations_dots[i].shape, x, y)) {
-					console.log('Clicked! on '+ makiwara.rerbstyle.drawing.stations_dots[i].id );
-					
-					//track status of thread
-					makiwara.rerbstyle.drawing.playing = !makiwara.rerbstyle.drawing.playing;
-
-					if (makiwara.rerbstyle.drawing.playing == true){
-						makiwara.rerbstyle.drawing.player.args.current_node = makiwara.rerbstyle.drawing.stations_dots[i];
-						makiwara.rerbstyle.drawing.player.start(1000);
-					}
-					else {
-						makiwara.rerbstyle.drawing.player.stop();
-					}
-						// makiwara.rerbstyle.drawing.play(makiwara.rerbstyle.drawing.stations_dots[i].shape )
-					// makiwara.rerbstyle.drawing_animation.play(makiwara.rerbstyle.drawing.stations_dots[i].shape, makiwara.rerbstyle.drawing);
-					
-					break;
-					
+				line = new Path2D();
+				angle = -(1-i/10)* span + this.grad.alpha;
+				if (i % 2 == 0) {
+					length = 0.8;
+					//draw the figure above the graduations
+					this.ctx.font = "16pt Arial";
+					this.ctx.textAlign = "center";
+					this.ctx.textBaseline = 'middle';
+					this.ctx.fillText(""+ i*10 + "%", this.grad.x + this.grad.radius * 0.7 * Math.cos(angle), this.grad.y + this.grad.radius * 0.7 * Math.sin(angle));
 				}
+				else
+				{
+					length = 0.9;
+				}
+
+				line.moveTo(this.grad.x + this.grad.radius * (length) * Math.cos(angle), this.grad.y + this.grad.radius * (length) * Math.sin(angle));
+				line.lineTo(this.grad.x + this.grad.radius * Math.cos(angle), this.grad.y + this.grad.radius * Math.sin(angle));
+		
+				this.ctx.lineWidth = this.grad_thickness;
+				this.ctx.strokeStyle = this.color_line;
+				this.ctx.lineJoin = "miter";
+		
+				//draw the line
+				this.ctx.stroke(line);
+				
+				
+				
+				
+				
+				
+			
 			}
-        }, false);
-	},
-	
-	/* ==========================
-	
-			Changing node
-	
-	 ============================*/
-	 
-	 
-	light_node : function (node){
-	
-		this.ctx.fillStyle = this.color_selected_stations;
-		this.ctx.fill(node);
-	},
-	
-	dark_node : function (node){
-	
-		this.ctx.fillStyle = this.color_default_stations;
-		this.ctx.fill(node);
-	},
-
-	/* ==========================
-	
-			Getters & setters
-	
-	 ============================*/
-
-
-	/* send the id and the path representing a station based on its name */
-	retrieve_stations : function (station) {
-		var i,l;
-		l = this.stations_dots.length;
-		for (i = 0; i < l ; i++){
-			if (this.stations_dots[i].id == station){
-				return this.stations_dots[i]
-				break
-			}
+			
+			
 		}
-		return null;
+	},
+	
+	
+	
+	
+	
+	/* ==========================
+	
+			drawing line
+	
+	 ============================*/
+	draw_line: function (percentage) {
+		//remove last line
+		this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+		
+		//draw the rest of the meter
+		this.draw_meter();
+		
+		//define the new line
+		this.line = new Path2D();
+		var span = 2*Math.PI - this.grad.omega + this.grad.alpha;
+		var angle = -span * (1-percentage) + this.grad.alpha;
+		
+		
+		this.line.moveTo(this.grad.x, this.grad.y);
+		this.line.lineTo(this.grad.x + this.grad.radius * 1.15 * Math.cos(angle), this.grad.y + this.grad.radius * 1.15 * Math.sin(angle));
+		
+		this.ctx.lineWidth = 2 * this.line_thickness;
+		this.ctx.strokeStyle = this.color_line;
+		this.ctx.lineJoin = "miter";
+		
+		//draw the line
+		this.ctx.stroke(this.line);
+		
+		
+		
 	}
 	
 }
 
-console.log("RERB.style initialization");
-console.log("=========================");
-/*set canvas general format*/
-makiwara.rerbstyle.drawing.set_canvas();
-/* Draw the shape of the line */
-makiwara.rerbstyle.drawing.draw_line();
-/* add stations on the line */
-makiwara.rerbstyle.drawing.add_stations();
-/* check all stations displayed */
-console.log(makiwara.rerbstyle.drawing.stations_dots);
-/* create animation manager */
-makiwara.rerbstyle.drawing.player = new Thread(makiwara.rerbstyle.animation);
-//makiwara.rerbstyle.drawing.player.init();
+
+

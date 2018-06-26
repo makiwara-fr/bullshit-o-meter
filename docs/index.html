@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
 
-  <title>RERB.style</title>
-  <meta name="description" content="RERB.style">
+  <title>bullshit-o-meter</title>
+  <meta name="description" content="Simple bullshit-o-meter">
   <meta name="author" content="makiwara.fr">
 
   <link rel="stylesheet" href="css/styles.css?v=1.0">
@@ -16,20 +16,24 @@
 </head>
 
 <body >
-	<header class="shadow">
-		<h1>RERB.style</h1>
-		<h2>A tribute to <a href="http://yamanote.style">yamanote.style</a></h2>
-		<p><a href="https://makiwara.fr">makiwara.fr</a> - 2018</p>
-	</header>
 	
-	<canvas id="line" class="shadow">
-	</canvas>
-	<audio id="player">
+	<section class="shadow">
+		<h1>Bullshit-o-meter</h1>
+		<canvas id="meter" >
+			Please use a more recent browser. 
+		</canvas>
+	<form>
+			<h2>Adjust to the level of bullshit you are listening</h2>
+			<input type="range" min="1" max="100" value="1" class="slider" id="slider">
+	</form>
+	<footer>
+		<a href="https://makiwara.fr">makiwara.fr</a>
+	</footer>
+	</section>
 	
-	Votre navigateur ne supporte pas les données sonores. Merci de faire une mise à jour vers un navigateur plus récent.
-	</audio>
-	<script src="animation.js"></script>
+
 	<script src="drawing.js"></script>
+	<script src="sliding.js"></script>
 	
 </body>
 </html>
