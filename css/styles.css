@@ -98,16 +98,14 @@ section {
 	align-content: center;
 	text-align: center;
 	padding: 1em ;
+	size: auto;
 }
 
 
 canvas {
 	
 }
-.no_margin {
-	margin: 0;
-	padding: 0;
-}
+
 
 #slider {
 	width: 75%;
@@ -149,4 +147,9 @@ p {
 
 .shadow {
 	 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.no_margin {
+	margin: 0;
+	padding: 0;
 }
