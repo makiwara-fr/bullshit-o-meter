@@ -1,11 +1,12 @@
-##Bullshit-o-meter
+# Bullshit-o-meter
 
-Show your boredom when you hear about an *agile disruptive blockchain*
+Show your boredom when you hear about an *agile disruptive blockchain* or any other BS.
 
-#parameter
+### parameter
 
-add the following parameter to the url
+add the parameter **value** to the url. Value between 0 and 100
 
-* ?value=[value] *
+````
+https://makiwara-fr.github.io/bullshit-o-meter/?value=75
+````
 
-value between 0 and 100
