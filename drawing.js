@@ -201,7 +201,7 @@ makiwara.bullshitometer.drawing = {
 				if (i % 2 == 0) {
 					length = 0.8;
 					//draw the figure above the graduations
-					this.ctx.font = "16pt Arial";
+					this.ctx.font = "16pt Open Sans";
 					this.ctx.textAlign = "center";
 					this.ctx.textBaseline = 'middle';
 					this.ctx.fillText(""+ i*10 + "%", this.grad.x + this.grad.radius * 0.7 * Math.cos(angle), this.grad.y + this.grad.radius * 0.7 * Math.sin(angle));
