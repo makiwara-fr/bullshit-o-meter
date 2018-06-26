@@ -1,9 +1,18 @@
 /*
 Theme Name: bullshit-o-meter
-Description: 
+Description:
+
+                 _    _                         
+ _ __ ___   __ _| | _(_)_      ____ _ _ __ __ _ 
+| '_ ` _ \ / _` | |/ / \ \ /\ / / _` | '__/ _` |
+| | | | | | (_| |   <| |\ V  V / (_| | | | (_| |
+|_| |_| |_|\__,_|_|\_\_| \_/\_/ \__,_|_|  \__,_|
+                                                
+
+ 
 Version: 0.1
-License: GNU General Public License v2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GNU General Public License v3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
 
 /* Content :
@@ -79,6 +88,9 @@ footer {
 	margin: 1em 0 1em 0;
 }
 
+/*----------------------------*/
+/* 300 - Headers & Footers */
+/*----------------------------*/
 
 
 section {
@@ -124,6 +136,16 @@ h3 {
 p {
 	font-family: 'Montserrat', sans-serif;
 }
+
+
+
+
+/*----------------------------*/
+/* 999 - generic */
+/*----------------------------*/
+
+
+
 
 .shadow {
 	 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
