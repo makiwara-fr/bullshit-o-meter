@@ -112,8 +112,8 @@ makiwara.bullshitometer.drawing = {
 		
 		
 		/* set canvas size*/
-		if (window.innerWidth < 480) {
-			this.canvas.width = 480;
+		if (window.innerWidth < 360) {
+			this.canvas.width = 340;
 		} 
 		else if (window.innerWidth < 600){
 			this.canvas.width = window.innerWidth * 0.9;

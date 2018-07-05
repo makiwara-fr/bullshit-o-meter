@@ -33,10 +33,25 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 /* fonts */
 @import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans:700');
 
+.all {
+	width: 75%;
+	padding: 1em ;
+}
 
 
+@media (max-width: 360px){
+	.all {
+		width : 350px;
+		padding : 0em;
+	}
+}
 
-
+@media (max-width: 600px){
+	.all {
+		width : 90%;
+		padding: 1em;
+	}
+}
 
 /* 
  Generic settings
@@ -97,8 +112,9 @@ section {
 	background-color: white;
 	align-content: center;
 	text-align: center;
-	padding: 1em ;
+	
 	size: auto;
+	
 }
 
 
