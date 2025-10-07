@@ -182,7 +182,7 @@ makiwara.bullshitometer.drawing = {
    				sector_path.arc(this.grad.x, this.grad.y, this.grad.radius * 1.15, this.grad.alpha - sector.start * span, this.grad.alpha - sector.end * span, true);
    				this.ctx.lineWidth = 5 * this.grad_sector_thickness;
    				// this.ctx.strokeStyle = sector.color;
-				thix.ctx.strokeStyle = rgbToRgba(sector.color, 0.8)
+				thix.ctx.strokeStyle = rgbToRgba(sector.color, 0.6)
    				this.ctx.stroke(sector_path);
 			};
 			
