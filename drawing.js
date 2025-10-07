@@ -171,18 +171,20 @@ makiwara.bullshitometer.drawing = {
  			//=====================
 			
 			var sector_path;
-			var sector_limits = [{color: this.color_ok, start: 0.8, end: 1}, {color: this.color_ok, start: 0.74, end: 0.795}, {color: this.color_ok, start: 0.7, end: 0.735}, {color: this.color_ok, start: 0.67, end: 0.695}, {color: this.color_danger, start: 0, end: 0.1},  {color: this.color_warning, start: 0.105, end: 0.2}, {color: this.color_warning, start: 0.205, end: 0.260}, {color: this.color_warning, start: 0.265, end: 0.29},{color: this.color_warning, start: 0.295, end: 0.31}];
+			var sector_limits = [{color: this.color_ok, start: 0.8, end: 1, alpha:1}, {color: this.color_ok, start: 0.74, end: 0.795, alpha: 0.6}, {color: this.color_ok, start: 0.7, end: 0.735, alpha:0.3}, {color: this.color_ok, start: 0.67, end: 0.695, alpha: 0.3}, {color: this.color_danger, start: 0, end: 0.1, alpha:1},  {color: this.color_warning, start: 0.105, end: 0.2, alpha:1}, {color: this.color_warning, start: 0.205, end: 0.260, alpha:1}, {color: this.color_warning, start: 0.265, end: 0.29, alpha:0.6},{color: this.color_warning, start: 0.295, end: 0.31, alpha:1}];
 
 			function rgbToRgba(rgb, alpha) {
 			  return rgb.replace('rgb(', 'rgba(').replace(')', `, ${alpha})`);
 			}
 			
 			for (let sector of sector_limits) {
+				
    				sector_path = new Path2D();
    				sector_path.arc(this.grad.x, this.grad.y, this.grad.radius * 1.15, this.grad.alpha - sector.start * span, this.grad.alpha - sector.end * span, true);
    				this.ctx.lineWidth = 5 * this.grad_sector_thickness;
    				// this.ctx.strokeStyle = sector.color;
-				thix.ctx.strokeStyle = rgbToRgba(sector.color, 0.6)
+				
+				thix.ctx.strokeStyle = rgbToRgba(sector.color, sector.alpha)
    				this.ctx.stroke(sector_path);
 			};
 			
